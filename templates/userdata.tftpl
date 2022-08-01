@@ -1,0 +1,75 @@
+#cloud-config
+users:
+  - name: ${username}
+    ssh-authorized-keys:
+      - ${ssh_pub_key}
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+packages:
+  - curl
+  - jq
+  - net-tools
+manage-resolv-conf: true
+resolv_conf:
+  nameservers:
+    - 'ns1.digitalocean.com'
+    - 'felipe.cloudflare.com'
+write_files:
+  - path: /etc/consul.d/consul.hcl
+    content: |
+      encrypt = "${encrypt}"
+      bootstrap_expect = ${servers}
+      datacenter = "${datacenter}"
+      auto_encrypt {
+        allow_tls = true
+      }
+
+      data_dir = "/consul/"
+      log_level = "INFO"
+      ui_config {
+        enabled =  true
+      }
+      server = true
+      client_addr = "0.0.0.0"
+      recursors = ["8.8.8.8"]
+      bind_addr = "0.0.0.0"
+      advertise_addr = "{{ GetInterfaceIP \"eth1\" }}"
+      retry_join = ["provider=digitalocean region=${region} tag_name=${tag} api_token=${join_token}"]
+  - path: /usr/lib/systemd/system/consul.service
+    content: |
+      [Unit]
+      Description="HashiCorp Consul - A service mesh solution"
+      Documentation=https://www.consul.io/
+      Requires=network-online.target
+      After=network-online.target
+      After=cloud-final.target
+      ConditionFileNotEmpty=/etc/consul.d/consul.hcl
+      ConditionFileNotEmpty=/usr/local/bin/consul
+
+      [Service]
+      After=cloud-final.target
+      Type=notify
+      User=root
+      Group=root
+      ExecStart=/usr/local/bin/consul agent \
+        -auto-reload-config \
+        -config-dir=/etc/consul.d/
+      ExecReload=/bin/kill --signal HUP $MAINPID
+      KillMode=process
+      KillSignal=SIGTERM
+      Restart=on-failure
+      LimitNOFILE=65536
+      StandardOutput=append:/var/log/consul.log
+      AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - |
+    curl -fL https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_linux_amd64.zip \
+    | gunzip -> /usr/local/bin/consul
+  - chmod a+x  /usr/local/bin/consul
+  - consul -version
+  - mkdir -p /consul/raft
+  - chown -Rvf ${username}:${username} /consul/raft
+  - systemctl daemon-reload
