@@ -1,7 +1,3 @@
-# This is the default outputs file.
-# Put all output values here.
-
-# Example:
-# output "test" {
-#   value = resource.type.name
-# }
+output "server_public_ips" {
+  value = digitalocean_droplet.server[*].ipv4_address
+}
