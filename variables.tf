@@ -9,6 +9,11 @@ variable "servers" {
   default     = 3
   description = "number of server instances"
 }
+variable "agents" {
+  type        = number
+  default     = 7
+  description = "number of agent instances"
+}
 
 variable "project_name" {
   type        = string

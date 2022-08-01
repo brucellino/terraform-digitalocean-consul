@@ -63,6 +63,7 @@ resource "digitalocean_droplet" "server" {
     "${path.module}/templates/userdata.tftpl",
     {
       consul_version = "1.12.3"
+      server         = true
       username       = var.username
       datacenter     = var.datacenter
       servers        = var.servers
@@ -78,9 +79,41 @@ resource "digitalocean_droplet" "server" {
   )
 }
 
+resource "digitalocean_droplet" "agent" {
+  count         = var.agents
+  image         = data.digitalocean_image.ubuntu.slug
+  name          = "consul-agent-${count.index}"
+  region        = data.digitalocean_vpc.selected.region
+  size          = var.droplet_size
+  vpc_uuid      = data.digitalocean_vpc.selected.id
+  ipv6          = false
+  backups       = false
+  monitoring    = true
+  tags          = ["consul-agent", "auto-destroy"]
+  ssh_keys      = [digitalocean_ssh_key.consul.id]
+  droplet_agent = true
+  user_data = templatefile(
+    "${path.module}/templates/userdata.tftpl",
+    {
+      consul_version = "1.12.3"
+      server         = false
+      username       = var.username
+      datacenter     = var.datacenter
+      servers        = var.servers
+      ssh_pub_key    = data.http.ssh_key.body
+      tag            = "consul-server"
+      region         = data.digitalocean_vpc.selected.region
+      join_token     = data.vault_generic_secret.join_token.data["autojoin_token"]
+      encrypt        = random_id.key.b64_std
+      domain         = digitalocean_domain.cluster.name
+      project        = data.digitalocean_project.p.name
+      count          = count.index
+    }
+  )
+}
 resource "digitalocean_firewall" "consul" {
   name        = "consul"
-  droplet_ids = digitalocean_droplet.server[*].id
+  droplet_ids = concat(digitalocean_droplet.server[*].id, digitalocean_droplet.agent[*].id)
 
   inbound_rule {
     protocol                  = "tcp"
@@ -90,19 +123,26 @@ resource "digitalocean_firewall" "consul" {
   inbound_rule {
     protocol    = "tcp"
     port_range  = "1-65535"
-    source_tags = ["consul-server"]
+    source_tags = ["consul-server", "consul-agent"]
   }
   inbound_rule {
     protocol    = "udp"
     port_range  = "1-65535"
-    source_tags = ["consul-server"]
-
+    source_tags = ["consul-server", "consul-agent"]
+  }
+  outbound_rule {
+    protocol   = "tcp"
+    port_range = "1-65535"
+  }
+  outbound_rule {
+    protocol   = "udp"
+    port_range = "1-65535"
   }
 }
 
 resource "digitalocean_firewall" "ssh" {
   name        = "ssh"
-  droplet_ids = digitalocean_droplet.server[*].id
+  droplet_ids = concat(digitalocean_droplet.server[*].id, digitalocean_droplet.agent[*].id)
 
   inbound_rule {
     protocol         = "tcp"
@@ -164,15 +204,20 @@ resource "digitalocean_record" "server" {
   domain = digitalocean_domain.cluster.name
 }
 
-resource "digitalocean_project_resources" "consul_droplets" {
+resource "digitalocean_project_resources" "server_droplets" {
   project   = data.digitalocean_project.p.id
   resources = digitalocean_droplet.server[*].urn
+}
+resource "digitalocean_project_resources" "agent_droplets" {
+  project   = data.digitalocean_project.p.id
+  resources = digitalocean_droplet.agent[*].urn
 }
 
 resource "digitalocean_project_resources" "consul_volumes" {
   project   = data.digitalocean_project.p.id
   resources = digitalocean_volume.consul_data[*].urn
 }
+
 
 resource "digitalocean_project_resources" "network" {
 
