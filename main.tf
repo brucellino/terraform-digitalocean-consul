@@ -36,6 +36,15 @@ resource "random_id" "key" {
   byte_length = 32
 }
 
+resource "digitalocean_volume" "consul_data" {
+  count                   = var.servers
+  region                  = data.digitalocean_vpc.selected.region
+  name                    = "consul-data-${count.index}"
+  size                    = "1"
+  initial_filesystem_type = "ext4"
+  description             = "Persistent data for Consul server ${count.index}"
+}
+
 resource "digitalocean_droplet" "server" {
   count         = var.servers
   image         = data.digitalocean_image.ubuntu.slug
@@ -49,6 +58,7 @@ resource "digitalocean_droplet" "server" {
   tags          = ["consul-server", "auto-destroy"]
   ssh_keys      = [digitalocean_ssh_key.consul.id]
   droplet_agent = true
+  volume_ids    = [tostring(digitalocean_volume.consul_data[count.index].id)]
   user_data = templatefile(
     "${path.module}/templates/userdata.tftpl",
     {
@@ -61,21 +71,11 @@ resource "digitalocean_droplet" "server" {
       region         = data.digitalocean_vpc.selected.region
       join_token     = data.vault_generic_secret.join_token.data["autojoin_token"]
       encrypt        = random_id.key.b64_std
+      domain         = digitalocean_domain.cluster.name
+      project        = data.digitalocean_project.p.name
+      count          = count.index
     }
   )
-
-  # provisioner "local-exec" {
-  #   command = "jq --arg value $(consul keygen) '.encrypt=$value' template.json > encrypt.json"
-  # }
-  # provisioner "file" {
-  #   connection {
-  #     type = "ssh"
-  #     user = "root"
-  #     host = self.ipv4_address
-  #   }
-  #   source      = "encrypt.json"
-  #   destination = "/etc/consul.d/encrypt.json"
-  # }
 }
 
 resource "digitalocean_firewall" "consul" {
@@ -98,21 +98,6 @@ resource "digitalocean_firewall" "consul" {
     source_tags = ["consul-server"]
 
   }
-}
-
-resource "digitalocean_project_resources" "consul_droplets" {
-  project   = data.digitalocean_project.p.id
-  resources = digitalocean_droplet.server[*].urn
-}
-
-resource "digitalocean_project_resources" "network" {
-
-  project = data.digitalocean_project.p.id
-
-  resources = [
-    digitalocean_loadbalancer.external.urn,
-    # digitalocean_domain.cluster.urn
-  ]
 }
 
 resource "digitalocean_firewall" "ssh" {
@@ -165,4 +150,36 @@ resource "digitalocean_loadbalancer" "external" {
 
   droplet_ids = digitalocean_droplet.server[*].id
   # redirect_http_to_https = true
+}
+
+resource "digitalocean_domain" "cluster" {
+  name = "hashi.local"
+}
+
+resource "digitalocean_record" "server" {
+  count  = 3
+  type   = "A"
+  value  = digitalocean_droplet.server[count.index].ipv4_address_private
+  name   = digitalocean_droplet.server[count.index].name
+  domain = digitalocean_domain.cluster.name
+}
+
+resource "digitalocean_project_resources" "consul_droplets" {
+  project   = data.digitalocean_project.p.id
+  resources = digitalocean_droplet.server[*].urn
+}
+
+resource "digitalocean_project_resources" "consul_volumes" {
+  project   = data.digitalocean_project.p.id
+  resources = digitalocean_volume.consul_data[*].urn
+}
+
+resource "digitalocean_project_resources" "network" {
+
+  project = data.digitalocean_project.p.id
+
+  resources = [
+    digitalocean_loadbalancer.external.urn,
+    digitalocean_domain.cluster.urn
+  ]
 }
