@@ -79,7 +79,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_agent_public_ips"></a> [agent\_public\_ips](#output\_agent\_public\_ips) | n/a |
-| <a name="output_load_balancer_ip"></a> [load\_balancer\_ip](#output\_load\_balancer\_ip) | n/a |
-| <a name="output_server_public_ips"></a> [server\_public\_ips](#output\_server\_public\_ips) | n/a |
+| <a name="output_agent_public_ips"></a> [agent\_public\_ips](#output\_agent\_public\_ips) | List of public IPs for the Consul agents |
+| <a name="output_load_balancer_ip"></a> [load\_balancer\_ip](#output\_load\_balancer\_ip) | Public IP of the load balancer fronting the servers |
+| <a name="output_server_public_ips"></a> [server\_public\_ips](#output\_server\_public\_ips) | List of public IPs for the Consul servers |
 <!-- END_TF_DOCS -->
