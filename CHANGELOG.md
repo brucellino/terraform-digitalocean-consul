@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/brucellino/terraform-digitalocean-consul/compare/v1.0.3...v1.0.4) (2022-08-02)
+
+
+### Bug Fixes
+
+* **output:** add descriptions to the outputs ([00f2504](https://github.com/brucellino/terraform-digitalocean-consul/commit/00f250489c5a0385d2eab7dcae840f8c6c6d7287))
+
 ## [1.0.3](https://github.com/brucellino/terraform-digitalocean-consul/compare/v1.0.2...v1.0.3) (2022-08-02)
 
 
