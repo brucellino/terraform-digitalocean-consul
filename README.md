@@ -46,7 +46,6 @@ No modules.
 | [digitalocean_firewall.ssh](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/firewall) | resource |
 | [digitalocean_loadbalancer.external](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/loadbalancer) | resource |
 | [digitalocean_project_resources.agent_droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
-| [digitalocean_project_resources.consul_volumes](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
 | [digitalocean_project_resources.network](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
 | [digitalocean_project_resources.server_droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
 | [digitalocean_record.server](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/record) | resource |
@@ -65,6 +64,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_agents"></a> [agents](#input\_agents) | number of agent instances | `number` | `7` | no |
+| <a name="input_consul_version"></a> [consul\_version](#input\_consul\_version) | Version of Consul to deploy | `string` | `"1.12.3"` | no |
 | <a name="input_datacenter"></a> [datacenter](#input\_datacenter) | Name of the Consul datacenter | `string` | `"HashiDO"` | no |
 | <a name="input_droplet_size"></a> [droplet\_size](#input\_droplet\_size) | Size of the droplet for Vault instances | `string` | `"s-1vcpu-1gb"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of the project in digitalocean | `string` | `"hashi"` | no |
@@ -72,7 +72,6 @@ No modules.
 | <a name="input_ssh_inbound_source_cidrs"></a> [ssh\_inbound\_source\_cidrs](#input\_ssh\_inbound\_source\_cidrs) | List of CIDRs from which we will allow ssh connections on port 22 | `list(any)` | `[]` | no |
 | <a name="input_ssh_public_key_url"></a> [ssh\_public\_key\_url](#input\_ssh\_public\_key\_url) | URL of of the public ssh key to add to the droplet | `string` | `"https://github.com/brucellino.keys"` | no |
 | <a name="input_username"></a> [username](#input\_username) | Name of the non-root user to add | `string` | `"hashiuser"` | no |
-| <a name="input_vpc"></a> [vpc](#input\_vpc) | VPC we are deploying into | `string` | n/a | yes |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC we are deploying into | `string` | `"hashi"` | no |
 
 ## Outputs

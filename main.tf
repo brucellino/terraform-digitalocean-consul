@@ -117,7 +117,7 @@ resource "digitalocean_droplet" "agent" {
   user_data = templatefile(
     "${path.module}/templates/userdata.tftpl",
     {
-      consul_version = "1.12.3"
+      consul_version = var.consul_version
       server         = false
       username       = var.username
       datacenter     = var.datacenter
@@ -220,7 +220,7 @@ resource "digitalocean_domain" "cluster" {
 }
 
 resource "digitalocean_record" "server" {
-  count  = 3
+  count  = var.servers
   type   = "A"
   value  = digitalocean_droplet.server[count.index].ipv4_address_private
   name   = digitalocean_droplet.server[count.index].name
@@ -236,10 +236,11 @@ resource "digitalocean_project_resources" "agent_droplets" {
   resources = digitalocean_droplet.agent[*].urn
 }
 
-resource "digitalocean_project_resources" "consul_volumes" {
-  project   = data.digitalocean_project.p.id
-  resources = digitalocean_volume.consul_data[*].urn
-}
+# resource "digitalocean_project_resources" "consul_volumes" {
+#   depends_on = digitalocean_project_resources.agent_droplets
+#   project    = data.digitalocean_project.p.id
+#   resources  = digitalocean_volume.consul_data[*].urn
+# }
 
 
 resource "digitalocean_project_resources" "network" {
