@@ -29,10 +29,18 @@ resource "digitalocean_ssh_key" "consul" {
   }
 }
 
+data "http" "consul_health" {
+  url = join("", ["http://", digitalocean_loadbalancer.external.ip, "/v1/health/service/consul"])
+  lifecycle {
+    postcondition {
+
+      condition     = contains([201, 200, 204, 503], self.status_code)
+      error_message = "Consul service is not healthy"
+    }
+  }
+}
+
 resource "random_id" "key" {
-  # keepers = {
-  #   droplet = digitalocean_droplet.server[0].id
-  # }
   byte_length = 32
 }
 
@@ -77,6 +85,20 @@ resource "digitalocean_droplet" "server" {
       count          = count.index
     }
   )
+  connection {
+    type = "ssh"
+    user = "root"
+    host = self.ipv4_address
+  }
+  provisioner "remote-exec" {
+    script = "${path.module}/provision/start-consul.sh"
+  }
+  # lifecycle {
+  #   postcondition {
+  #     condition     = contains([201, 200, 204], data.http.consul_health.status_code)
+  #     error_message = "Consul service is not healthy"
+  #   }
+  # }
 }
 
 resource "digitalocean_droplet" "agent" {
@@ -188,7 +210,8 @@ resource "digitalocean_loadbalancer" "external" {
     healthy_threshold      = 3
   }
 
-  droplet_ids = digitalocean_droplet.server[*].id
+  # droplet_ids = digitalocean_droplet.server[*].id
+  droplet_tag = "consul-server"
   # redirect_http_to_https = true
 }
 
