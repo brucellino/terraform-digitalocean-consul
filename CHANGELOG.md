@@ -1,3 +1,17 @@
+## [1.0.3](https://github.com/brucellino/terraform-digitalocean-consul/compare/v1.0.2...v1.0.3) (2022-08-02)
+
+
+### Bug Fixes
+
+* **readme:** remove boilerplate readme ([4ba7fb5](https://github.com/brucellino/terraform-digitalocean-consul/commit/4ba7fb586a8a833cce5e367201f97d6d53a504d5))
+
+## [1.0.2](https://github.com/brucellino/terraform-digitalocean-consul/compare/v1.0.1...v1.0.2) (2022-08-02)
+
+
+### Bug Fixes
+
+* **changelog:** add changelog ([0c2fe20](https://github.com/brucellino/terraform-digitalocean-consul/commit/0c2fe209f53979e57442f9076decd0568eed498a))
+
 ## [1.0.1](https://github.com/brucellino/terraform-digitalocean-consul/compare/v1.0.0...v1.0.1) (2022-08-02)
 
 
