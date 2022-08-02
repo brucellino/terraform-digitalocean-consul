@@ -26,15 +26,23 @@ provider "digitalocean" {
   token = data.vault_generic_secret.do.data["token"]
 }
 
-
-
 module "vpc" {
   source   = "brucellino/vpc/digitalocean"
   version  = "1.0.0"
   vpc_name = "consultest"
+  project = {
+    description = "Consul Test project"
+    environment = "development"
+    name        = "consulTest"
+    purpose     = "Personal"
+  }
 }
 
 module "consul" {
-  source = "../../"
-  vpc    = "consultest"
+  depends_on   = [module.vpc]
+  source       = "../../"
+  servers      = 1
+  agents       = 1
+  vpc_name     = "consultest"
+  project_name = "consulTest"
 }
