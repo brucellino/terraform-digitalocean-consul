@@ -1,5 +1,8 @@
 #cloud-config
 manage_etc_hosts: false
+manage_resolv_conf: true
+mounts:
+   - [ /dev/disk/by-id/scsi-0DO_Volume_consul-data-${count}, /consul, ext4, "discard,defaults,noatime" ]
 users:
   - name: ${username}
     ssh-authorized-keys:
@@ -13,24 +16,29 @@ packages:
 manage-resolv-conf: true
 resolv_conf:
   nameservers:
-    - 'ns1.digitalocean.com'
-    - 'felipe.cloudflare.com'
+    - '1.1.1.1'
+  searchdomains:
+    - ${domain}
+    - ${project}
+  domain: ${domain}
+
 write_files:
   - path: /etc/consul.d/consul.hcl
     content: |
       encrypt = "${encrypt}"
-      bootstrap_expect = ${servers}
+      %{if server }bootstrap_expect = ${servers}%{ endif }
       datacenter = "${datacenter}"
+      %{if server }
       auto_encrypt {
         allow_tls = true
       }
-
+      %{ endif }
       data_dir = "/consul/"
       log_level = "INFO"
       ui_config {
         enabled =  true
       }
-      server = true
+      server = ${server}
       client_addr = "0.0.0.0"
       recursors = ["8.8.8.8"]
       bind_addr = "0.0.0.0"
@@ -42,13 +50,11 @@ write_files:
       Description="HashiCorp Consul - A service mesh solution"
       Documentation=https://www.consul.io/
       Requires=network-online.target
-      After=network-online.target
-      After=cloud-init.target
+      Requires=cloud-init.target
       ConditionFileNotEmpty=/etc/consul.d/consul.hcl
       ConditionFileNotEmpty=/usr/local/bin/consul
 
       [Service]
-      After=cloud-init.target
       Type=notify
       User=root
       Group=root
@@ -72,6 +78,5 @@ runcmd:
     | gunzip -> /usr/local/bin/consul
   - chmod a+x  /usr/local/bin/consul
   - consul -version
-  - mkdir -p /consul/raft
-  - chown -Rvf ${username}:${username} /consul/raft
   - systemctl daemon-reload
+  - systemctl enable consul
