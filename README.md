@@ -17,10 +17,10 @@ These examples show how to use the module in your project, and are also use for 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >1.2.0 |
-| <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | 2.21.0 |
-| <a name="requirement_http"></a> [http](#requirement\_http) | 3.0.1 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | 3.3.2 |
-| <a name="requirement_vault"></a> [vault](#requirement\_vault) | 3.8.0 |
+| <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | >=2.21.0 |
+| <a name="requirement_http"></a> [http](#requirement\_http) | >=3.0.1 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >=3.3.2 |
+| <a name="requirement_vault"></a> [vault](#requirement\_vault) | >=3.8.0 |
 
 ## Providers
 
@@ -39,25 +39,25 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [digitalocean_domain.cluster](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/domain) | resource |
-| [digitalocean_droplet.agent](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/droplet) | resource |
-| [digitalocean_droplet.server](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/droplet) | resource |
-| [digitalocean_firewall.consul](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/firewall) | resource |
-| [digitalocean_firewall.ssh](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/firewall) | resource |
-| [digitalocean_loadbalancer.external](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/loadbalancer) | resource |
-| [digitalocean_project_resources.agent_droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
-| [digitalocean_project_resources.network](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
-| [digitalocean_project_resources.server_droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/project_resources) | resource |
-| [digitalocean_record.server](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/record) | resource |
-| [digitalocean_ssh_key.consul](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/ssh_key) | resource |
-| [digitalocean_volume.consul_data](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/resources/volume) | resource |
-| [random_id.key](https://registry.terraform.io/providers/hashicorp/random/3.3.2/docs/resources/id) | resource |
-| [digitalocean_image.ubuntu](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/data-sources/image) | data source |
-| [digitalocean_project.p](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/data-sources/project) | data source |
-| [digitalocean_vpc.selected](https://registry.terraform.io/providers/digitalocean/digitalocean/2.21.0/docs/data-sources/vpc) | data source |
-| [http_http.consul_health](https://registry.terraform.io/providers/hashicorp/http/3.0.1/docs/data-sources/http) | data source |
-| [http_http.ssh_key](https://registry.terraform.io/providers/hashicorp/http/3.0.1/docs/data-sources/http) | data source |
-| [vault_generic_secret.join_token](https://registry.terraform.io/providers/hashicorp/vault/3.8.0/docs/data-sources/generic_secret) | data source |
+| [digitalocean_domain.cluster](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/domain) | resource |
+| [digitalocean_droplet.agent](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/droplet) | resource |
+| [digitalocean_droplet.server](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/droplet) | resource |
+| [digitalocean_firewall.consul](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/firewall) | resource |
+| [digitalocean_firewall.ssh](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/firewall) | resource |
+| [digitalocean_loadbalancer.external](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/loadbalancer) | resource |
+| [digitalocean_project_resources.agent_droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project_resources) | resource |
+| [digitalocean_project_resources.network](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project_resources) | resource |
+| [digitalocean_project_resources.server_droplets](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/project_resources) | resource |
+| [digitalocean_record.server](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/record) | resource |
+| [digitalocean_ssh_key.consul](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/ssh_key) | resource |
+| [digitalocean_volume.consul_data](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/volume) | resource |
+| [random_id.key](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
+| [digitalocean_image.ubuntu](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/data-sources/image) | data source |
+| [digitalocean_project.p](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/data-sources/project) | data source |
+| [digitalocean_vpc.selected](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/data-sources/vpc) | data source |
+| [http_http.consul_health](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
+| [http_http.ssh_key](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
+| [vault_generic_secret.join_token](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/data-sources/generic_secret) | data source |
 
 ## Inputs
 
