@@ -26,10 +26,10 @@ These examples show how to use the module in your project, and are also use for 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_digitalocean"></a> [digitalocean](#provider\_digitalocean) | 2.26.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | 3.2.1 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.4.3 |
-| <a name="provider_vault"></a> [vault](#provider\_vault) | 3.13.0 |
+| <a name="provider_digitalocean"></a> [digitalocean](#provider\_digitalocean) | >=2.21.0 |
+| <a name="provider_http"></a> [http](#provider\_http) | >=3.0.1 |
+| <a name="provider_random"></a> [random](#provider\_random) | >=3.3.2 |
+| <a name="provider_vault"></a> [vault](#provider\_vault) | >=3.8.0 |
 
 ## Modules
 
