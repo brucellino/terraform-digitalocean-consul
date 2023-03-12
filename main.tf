@@ -75,7 +75,7 @@ resource "digitalocean_droplet" "server" {
       username       = var.username
       datacenter     = var.datacenter
       servers        = var.servers
-      ssh_pub_key    = data.http.ssh_key.body
+      ssh_pub_key    = data.http.ssh_key.response_body
       tag            = "consul-server"
       region         = data.digitalocean_vpc.selected.region
       join_token     = data.vault_generic_secret.join_token.data["autojoin_token"]
@@ -122,7 +122,7 @@ resource "digitalocean_droplet" "agent" {
       username       = var.username
       datacenter     = var.datacenter
       servers        = var.servers
-      ssh_pub_key    = data.http.ssh_key.body
+      ssh_pub_key    = data.http.ssh_key.response_body
       tag            = "consul-server"
       region         = data.digitalocean_vpc.selected.region
       join_token     = data.vault_generic_secret.join_token.data["autojoin_token"]
@@ -220,7 +220,7 @@ resource "digitalocean_domain" "cluster" {
 }
 
 resource "digitalocean_record" "server" {
-  count  = 3
+  count  = var.servers
   type   = "A"
   value  = digitalocean_droplet.server[count.index].ipv4_address_private
   name   = digitalocean_droplet.server[count.index].name

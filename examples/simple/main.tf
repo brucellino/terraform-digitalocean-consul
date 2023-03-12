@@ -2,11 +2,11 @@ terraform {
   required_providers {
     vault = {
       source  = "hashicorp/vault"
-      version = "3.8.0"
+      version = "3.13.0"
     }
     digitalocean = {
       source  = "digitalocean/digitalocean"
-      version = "2.21.0"
+      version = "2.26.0"
     }
   }
   backend "consul" {
@@ -28,7 +28,7 @@ provider "digitalocean" {
 
 module "vpc" {
   source   = "brucellino/vpc/digitalocean"
-  version  = "1.0.0"
+  version  = "1.0.3"
   vpc_name = "consultest"
   project = {
     description = "Consul Test project"
