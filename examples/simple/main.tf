@@ -19,11 +19,11 @@ provider "vault" {
 }
 
 data "vault_generic_secret" "do" {
-  path = "kv/do"
+  path = "digitalocean/tokens"
 }
 
 provider "digitalocean" {
-  token = data.vault_generic_secret.do.data["token"]
+  token = data.vault_generic_secret.do.data["terraform"]
 }
 
 variable "consul_version" {
@@ -34,7 +34,7 @@ variable "consul_version" {
 module "vpc" {
   source   = "brucellino/vpc/digitalocean"
   version  = "1.0.3"
-  vpc_name = "consultest"
+  vpc_name = "consultest-${var.consul_version}"
   project = {
     description = "Consul v${var.consul_version} Test Project"
     environment = "development"
@@ -44,11 +44,12 @@ module "vpc" {
 }
 
 module "consul" {
-  depends_on     = [module.vpc]
-  source         = "../../"
-  servers        = 1
-  agents         = 1
-  vpc_name       = "consultest"
-  project_name   = "consulTest"
-  consul_version = var.consul_version
+  depends_on               = [module.vpc]
+  source                   = "../../"
+  servers                  = 1
+  agents                   = 1
+  vpc_name                 = "consultest-${var.consul_version}"
+  project_name             = "consulTest_v${var.consul_version}"
+  consul_version           = var.consul_version
+  ssh_inbound_source_cidrs = []
 }
