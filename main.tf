@@ -63,7 +63,7 @@ resource "digitalocean_droplet" "server" {
   ipv6          = false
   backups       = false
   monitoring    = true
-  tags          = ["consul-server", "auto-destroy"]
+  tags          = ["consul", "consul-server", "auto-destroy"]
   ssh_keys      = [digitalocean_ssh_key.consul.id]
   droplet_agent = true
   volume_ids    = [tostring(digitalocean_volume.consul_data[count.index].id)]
@@ -75,10 +75,10 @@ resource "digitalocean_droplet" "server" {
       username       = var.username
       datacenter     = var.datacenter
       servers        = var.servers
-      ssh_pub_key    = data.http.ssh_key.body
+      ssh_pub_key    = data.http.ssh_key.response_body
       tag            = "consul-server"
       region         = data.digitalocean_vpc.selected.region
-      join_token     = data.vault_generic_secret.join_token.data["autojoin_token"]
+      join_token     = data.vault_generic_secret.join_token.data["consul_auto_join"]
       encrypt        = random_id.key.b64_std
       domain         = digitalocean_domain.cluster.name
       project        = data.digitalocean_project.p.name
@@ -111,7 +111,7 @@ resource "digitalocean_droplet" "agent" {
   ipv6          = false
   backups       = false
   monitoring    = true
-  tags          = ["consul-agent", "auto-destroy"]
+  tags          = ["consul", "consul-agent", "auto-destroy"]
   ssh_keys      = [digitalocean_ssh_key.consul.id]
   droplet_agent = true
   user_data = templatefile(
@@ -122,10 +122,10 @@ resource "digitalocean_droplet" "agent" {
       username       = var.username
       datacenter     = var.datacenter
       servers        = var.servers
-      ssh_pub_key    = data.http.ssh_key.body
+      ssh_pub_key    = data.http.ssh_key.response_body
       tag            = "consul-server"
       region         = data.digitalocean_vpc.selected.region
-      join_token     = data.vault_generic_secret.join_token.data["autojoin_token"]
+      join_token     = data.vault_generic_secret.join_token.data["consul_auto_join"]
       encrypt        = random_id.key.b64_std
       domain         = digitalocean_domain.cluster.name
       project        = data.digitalocean_project.p.name
@@ -153,12 +153,14 @@ resource "digitalocean_firewall" "consul" {
     source_tags = ["consul-server", "consul-agent"]
   }
   outbound_rule {
-    protocol   = "tcp"
-    port_range = "1-65535"
+    protocol         = "tcp"
+    port_range       = "1-65535"
+    destination_tags = ["consul"]
   }
   outbound_rule {
-    protocol   = "udp"
-    port_range = "1-65535"
+    protocol         = "udp"
+    port_range       = "1-65535"
+    destination_tags = ["consul"]
   }
 }
 
@@ -220,7 +222,7 @@ resource "digitalocean_domain" "cluster" {
 }
 
 resource "digitalocean_record" "server" {
-  count  = 3
+  count  = var.servers
   type   = "A"
   value  = digitalocean_droplet.server[count.index].ipv4_address_private
   name   = digitalocean_droplet.server[count.index].name

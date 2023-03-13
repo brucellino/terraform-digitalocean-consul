@@ -54,7 +54,7 @@ variable "username" {
 variable "consul_version" {
   description = "Version of Consul to deploy"
   type        = string
-  default     = "1.12.3"
+  default     = "1.15.1"
 }
 
 variable "datacenter" {

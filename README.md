@@ -65,7 +65,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_agents"></a> [agents](#input\_agents) | number of agent instances | `number` | `7` | no |
-| <a name="input_consul_version"></a> [consul\_version](#input\_consul\_version) | Version of Consul to deploy | `string` | `"1.12.3"` | no |
+| <a name="input_consul_version"></a> [consul\_version](#input\_consul\_version) | Version of Consul to deploy | `string` | `"1.15.1"` | no |
 | <a name="input_datacenter"></a> [datacenter](#input\_datacenter) | Name of the Consul datacenter | `string` | `"HashiDO"` | no |
 | <a name="input_droplet_size"></a> [droplet\_size](#input\_droplet\_size) | Size of the droplet for Vault instances | `string` | `"s-1vcpu-1gb"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of the project in digitalocean | `string` | `"hashi"` | no |
