@@ -15,7 +15,7 @@ These examples show how to use the module in your project, and are also use for 
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >1.2.0 |
 | <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | >=2.21.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >=3.0.1 |
@@ -25,7 +25,7 @@ These examples show how to use the module in your project, and are also use for 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_digitalocean"></a> [digitalocean](#provider\_digitalocean) | >=2.21.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | >=3.0.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.3.2 |
@@ -38,7 +38,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [digitalocean_domain.cluster](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/domain) | resource |
 | [digitalocean_droplet.agent](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/droplet) | resource |
 | [digitalocean_droplet.server](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/droplet) | resource |
@@ -63,7 +63,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_agents"></a> [agents](#input\_agents) | number of agent instances | `number` | `7` | no |
 | <a name="input_consul_version"></a> [consul\_version](#input\_consul\_version) | Version of Consul to deploy | `string` | `"1.15.1"` | no |
 | <a name="input_datacenter"></a> [datacenter](#input\_datacenter) | Name of the Consul datacenter | `string` | `"HashiDO"` | no |
@@ -78,7 +78,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_agent_public_ips"></a> [agent\_public\_ips](#output\_agent\_public\_ips) | List of public IPs for the Consul agents |
 | <a name="output_load_balancer_ip"></a> [load\_balancer\_ip](#output\_load\_balancer\_ip) | Public IP of the load balancer fronting the servers |
 | <a name="output_server_public_ips"></a> [server\_public\_ips](#output\_server\_public\_ips) | List of public IPs for the Consul servers |
